@@ -1,5 +1,9 @@
-function pts = segment_contours(E)
-[ny,nx] = size(E);
+function pts = segment_contours(img)
+[ny nx] = size(img);
+
+model = get_dollar_model();
+
+[E,o] = edgesDetect(img,model); 
 E1 = E;
 
 E1(E1 < 0.001) = 0;
@@ -11,27 +15,20 @@ E3 = bwmorph(E2,'spur',5);
 B = edgelink(E3,15);
 Bsz = cellfun(@(x) size(x,1),B);
 
-G = repelem(1:numel(B),Bsz);
-
+G = findgroups(repelem(1:numel(B),Bsz));
 x = cat(1,B{:})';
-
 [x(1,:),x(2,:)] = deal(x(2,:),x(1,:));
-ind = sub2ind([ny nx],x(2,:),x(1,:));
-pts = struct('x',mat2cell(x,2,ones(1,size(x,2))), ...
-             'G',mat2cell(G,1,ones(1,numel(G))));
 
-tmp = mat2cell(findgroups([pts(:).G]), ...
-               1,ones(1,numel(pts)));
-[pts(:).G] = tmp{:}; 
-
-x = [pts(:).x];
-G = [pts(:).G];
- 
 dy_dx = ...
     msplitapply(@(x) dlines('calc_orientation',x,'stride',2), ...
                 x,G);
-kappa = msplitapply(@(x) dlines('calc_curvature',x,'stride',5), ...
-                    x,G);
+kappa = ...
+    msplitapply(@(x) dlines('calc_curvature',x,'stride',5), ...
+                x,G);
+
+pts = struct('x',mat2cell(x,2,ones(1,size(x,2))), ...
+             'G',mat2cell(G,1,ones(1,numel(G))));
+
 uG = unique(G);
 maxGc = 0;
 for g = 1:numel(uG)
@@ -67,3 +64,22 @@ if numel(x) < 20
     x(:) = nan;
 end
 
+
+function model = get_dollar_model()
+% Demo for Structured Edge Detector (please see readme.txt first).
+%% set opts for training (see edgesTrain.m)
+opts=edgesTrain();                % default options (good settings)
+opts.modelDir='models/';          % model will be in models/forest
+opts.modelFnm='modelBsds';        % model name
+opts.nPos=5e5; opts.nNeg=5e5;     % decrease to speedup training
+opts.useParfor=0;                 % parallelize if sufficient memory
+
+%% train edge detector (~20m/8Gb per tree, proportional to nPos/nNeg)
+tic, model=edgesTrain(opts); toc; % will load model if already trained
+
+%% set detection parameters (can set after training)
+model.opts.multiscale=1;          % for top accuracy set multiscale=1
+model.opts.sharpen=2;             % for top speed set sharpen=0
+model.opts.nTreesEval=4;          % for top speed set nTreesEval=1
+model.opts.nThreads=4;            % max number threads for evaluation
+model.opts.nms=1;                 % set to true to enable nms
