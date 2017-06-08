@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.6)
+project(dlines)
+find_package(Matlab REQUIRED)
+matlab_add_mex(NAME dlines SRC dlines.mex.cpp OUTPUT_NAME dlines)
+target_compile_options(dlines PRIVATE -std=c++11 -fno-omit-frame-pointer)
+target_include_directories(dlines PRIVATE . ~/src/dlines/cpp ~/src/mexplus/include ~/src/mexplusplus/cpp)
+install(TARGETS dlines LIBRARY DESTINATION mex)
