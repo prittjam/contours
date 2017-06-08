@@ -1,5 +1,4 @@
 function [] = contour_demo()
-DL.dlines_init();
 % Demo for Structured Edge Detector (please see readme.txt first).
 
 %% set opts for training (see edgesTrain.m)
