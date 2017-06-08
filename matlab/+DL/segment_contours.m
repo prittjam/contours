@@ -20,7 +20,7 @@ E1(E1 ~= 0) = 1;
 E2 = bwmorph(E1,'thin',Inf);
 E3 = bwmorph(E2,'spur',5);
 
-B = edgelink(E3,cfg.min_length);
+B = DL.edgelink(E3,cfg.min_length);
 Bsz = cellfun(@(x) size(x,1),B);
 
 G = repelem(1:numel(B),Bsz);
