@@ -8,7 +8,7 @@ matlab_add_mex(NAME dlines SRC dlines.mex.cpp OUTPUT_NAME dlines)
 
 include_directories(EIGEN3_INCLUDE_DIR .)
 target_include_directories(dlines PRIVATE ${PROJECT_SOURCE_DIR}/external/mexplus/include 
-                                  ${PROJECT_SOURCE_DIR}/external/mexplusplus/include)
+                                  ${PROJECT_SOURCE_DIR}/external/cpp/mexplusplus/include)
 
 target_compile_options(dlines PRIVATE "-std=c++11")
 
