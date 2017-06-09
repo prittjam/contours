@@ -1,6 +1,10 @@
 function [] = contour_demo()
 dlines_init();
-img = imread(['/home/prittjam/src/gtrepeat/dggt/building_us.jpg']);
+
+[cur_path, name, ext] = fileparts(mfilename('fullpath'));
+parent_path = fileparts(cur_path);
+
+img = imread([parent_path '/img/building_us.jpg']);
 [ny,nx,~ ] = size(img);
 
 pts = DL.segment_contours(img);
