@@ -4,6 +4,7 @@ if nargin < 1
 end
 
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
+
 addpath([cur_path]);
 
 parent_path = fileparts(cur_path);

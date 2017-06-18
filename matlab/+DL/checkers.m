@@ -18,10 +18,12 @@ corner_list = reshape(corner_list,9,6)';
 corners =   [ corner_list{1,:} ];
 dr = struct('u',mat2cell(corners,3,ones(1,size(corners,2))));
 
+
+
 [h,w,~] = size(img);
 cc = [w/2 h/2];
 solver = RANSAC.WRAP.pt1x3_to_q(cc);
-corresp = ones(1,numel(dr));
+corresp = ones(1,numel(dr)); 
 
 model_list = solver.fit(dr,corresp,numel(corresp));
 
