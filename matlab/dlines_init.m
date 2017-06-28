@@ -17,6 +17,10 @@ if ~exist('edgesDemo','file')
     addpath([parent_path '/external/edges']);
 end
 
+if ~exist('+LINE','dir')
+    addpath([parent_path '/external/lines']);
+end
+
 if ~exist('cmp_splitapply','file')
     addpath([parent_path '/external/matlab_extras']);
 end
