@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project (dlines)
+project (contours)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   message("-- Prefix initialized to default")
@@ -10,3 +10,4 @@ endif()
 
 add_subdirectory(cpp)
 add_subdirectory(matlab)
+
