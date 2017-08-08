@@ -33,12 +33,14 @@
 %
 % n: normals at the sampled points
 function [patch,Rp,curve,xp,n] = make_patch(contour,img,varargin)
-cfg.patch_ny = 41;
-cfg.aspect_ratio = 16/9;
+cfg = struct('patch_ny', 41, ...
+             'aspect_ratio', 16/9, ...
+             'scale', 60, ...
+             'ysampling_freq', 10);
 cfg.patch_nx = round(cfg.aspect_ratio*cfg.patch_ny);
-cfg.scale = 60;
-cfg.ysampling_freq = 10;
 cfg.xsampling_freq = round(cfg.aspect_ratio*cfg.ysampling_freq);
+
+cfg = cmp_argparse(cfg,varargin{:});
 
 x = [contour(:).x];
 ind = floor(linspace(1,size(x,2),cfg.xsampling_freq));
