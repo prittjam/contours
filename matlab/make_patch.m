@@ -73,3 +73,4 @@ R.XWorldLimits = [-cfg.aspect_ratio/2 cfg.aspect_ratio/2];
 R.YWorldLimits = [-0.5 0.5];
 
 [patch,Rp] = imwarp(img,tform,'OutputView',R);
+patch = patch(end:-1:1,:,:);
