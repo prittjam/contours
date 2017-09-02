@@ -29,6 +29,12 @@ if ~exist('cmp_splitapply','file')
     addpath([parent_path '/external/matlab_extras']);
 end
 
+if ~exist('anisodiff','file')
+    addpath([parent_path '/external/kovesi']);
+end
+
 if ~exist('channels','dir')
     addpath(genpath([parent_path '/external/toolbox']));
 end
+
+

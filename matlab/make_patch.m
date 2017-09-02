@@ -1,65 +1,29 @@
-% make_patch makes a normalized patch from a region defined by a contour
-%
-% Configuration options:
-%
-% patch_ny: number of patch rows
-%
-% aspect_ratio: aspect ratio of the patch, for a square, set to 1,
-% implicitly defines the number of patch columns
-%
-% scale: diameter of the region with the contour as the center of
-% the region
-%
-% ysampling_freq: the number of sampling points along the y-axis of
-% the patch, or, equivalently, along the normal to a sampling point
-% on the contour
-%
-% xsampling_freq: the number of sampling points along the x-axis of
-% the patch, or, equivalently, along the contour. Currently the
-% xsampling_freq also defines the interpolating points of the
-% parammetric cubic interpolating spline
-%
-%
-% Outputs:
-%
-% patch: normalized region of interest
-%
-% Rp: patch 2D normalized reference coordinate system 
-%
-% curve: the interpolating spline used to define the ROI in image
-% space
-% 
-% xp: sampled points on the spline
-%
-% n: normals at the sampled points
-function [patch,Rp,curve,xp,n] = make_patch(contour,img,varargin)
+function [patch,Rp] = make_patch(contour,img,varargin)
 cfg = struct('patch_ny', 41, ...
              'aspect_ratio', 16/9, ...
-             'scale', 60, ...
+             'scale_list', 30, ...
              'ysampling_freq', 10);
+
 cfg.patch_nx = round(cfg.aspect_ratio*cfg.patch_ny);
 cfg.xsampling_freq = round(cfg.aspect_ratio*cfg.ysampling_freq);
 
-cfg = cmp_argparse(cfg,varargin{:});
+[cfg,leftover] = cmp_argparse(cfg,varargin{:});
 
-x = [contour(:).x];
-ind = floor(linspace(1,size(x,2),cfg.xsampling_freq));
-curve = cscvn(x(:,ind));
-der = fnder(curve);
-xp = ppval(curve,curve.breaks);
-dydx = ppval(der,curve.breaks);
-n = [dydx(2,:); ...
-     -dydx(1,:)];
-n = bsxfun(@rdivide,n,sqrt(sum(n.^2)));
+N = size(par_contour.x1,2);
+ind = floor(linspace(1,N,cfg.xsampling_freq));
 
-s = linspace(-cfg.scale/2,cfg.scale/2,cfg.ysampling_freq);
-X = zeros(numel(s),cfg.xsampling_freq);
-Y = zeros(numel(s),cfg.xsampling_freq);
+X = zeros(cfg.ysampling_freq,cfg.xsampling_freq);
+Y = zeros(cfg.ysampling_freq,cfg.xsampling_freq);
 
-for j = 1:size(X,2)
-    x2 = xp(:,j)+bsxfun(@times,s,n(:,j));
-    X(:,j) = x2(1,:);
-    Y(:,j) = x2(2,:);
+par_contour = select_par_contour(contour,img,scale_list);
+
+for k = 1:size(X,2)
+    s = linspace(0, ...
+                 norm(par_contour.x1(:,ind(k))-par_contour.x2(:,ind(k))), ...
+                 cfg.ysampling_freq);
+    x2 = par_contour.x1(:,ind(k))+bsxfun(@times,s,n(:,k));
+    X(:,k) = x2(1,:);
+    Y(:,k) = x2(2,:);
 end
 
 [xxn,yyn] = ...
@@ -76,3 +40,19 @@ R.YWorldLimits = [-0.5 0.5];
 
 [patch,Rp] = imwarp(img,tform,'OutputView',R);
 patch = patch(end:-1:1,:,:);
+
+function par_contour = selct_par_contour(contour,img,sc_list)
+if numel(sc_list) > 1
+    for k2 = 1:numel(sc_list);
+        [par_contour_list(k2),n] = ...
+            make_par_contours(contour,2*cfg.scale);    
+        rgn_stats(k2) = ...
+            calc_entropy(par_contour_list(k2),grey_img);
+    end
+    rgn_stats = calc_saliency(rgn_stats);
+    [ind,best_scale] = select_scale(rgn_stats);
+    par_contour = par_contour_list(ind);
+else
+    [par_contour_list(k2),n] = ...
+        make_par_contours(contour,cfg.scale);    
+end
