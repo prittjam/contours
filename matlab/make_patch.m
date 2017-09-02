@@ -44,9 +44,10 @@ patch = patch(end:-1:1,:,:);
 
 function [par_curves,n] = select_par_curves(contour,img,sc_list)
 if numel(sc_list) > 1
+    grey_img = im2double(rgb2gray(img));
     for k = 1:numel(sc_list);
         [par_curves_list(k),n] = ...
-            make_par_curves(contour,2*cfg.scale);    
+            make_par_curves(contour,sc_list(k));    
         rgn_stats(k) = ...
             calc_entropy(par_curves_list(k),grey_img);
     end

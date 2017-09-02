@@ -8,7 +8,8 @@ dlines_init();
 parent_path = fileparts(cur_path);
 
 %img = imread('/home/old-ufo/dev/line_Jimmy/dlines/img/building_us.jpg');
-img_fname = [parent_path '/img/pyramid.jpg']
+%img_fname = [parent_path '/img/pyramid.jpg']
+img_fname = ['img3.png'];
 img = imread(img_fname);
 [ny,nx,~ ] = size(img);
 
@@ -28,12 +29,12 @@ grey_img = im2double(rgb2gray(img));
 figure;
 imshow(img);
 
-patch_list = zeros(41,73,3,10);
-for k = 1:10
+num_patches = min(12,numel(Gsz));
+patch_list = zeros(41,73,3,num_patches);
+for k = 1:num_patches
     contour = pts(G==ind(k));
     [patch_list(:,:,:,k),Rp,par_curves] = ...
         make_patch(contour,img, 'scale_list',cfg.scale_list);
-
     x = [contour(:).x];
     hold on;
     plot(x(1,:),x(2,:), ...

@@ -16,7 +16,7 @@ function rgn_stats = calc_saliency(rgn_stats)
 
     k = numel(W);
     W(end) = rgn_stats(k).area/(rgn_stats(k).area-rgn_stats(k-1).area) * ...
-              (sum(abs(rgn_stats(k).pmf-rgn_stats(k-1).pmf)))
+              (sum(abs(rgn_stats(k).pmf-rgn_stats(k-1).pmf)));
 
     Y = W.*[rgn_stats(:).H];
     Yc = mat2cell(Y,1,ones(1,numel(Y)));
