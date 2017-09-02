@@ -23,29 +23,23 @@ grey_img = im2double(rgb2gray(img));
 
 figure;
 imshow(img);
-h = gca;
 
+patch_list = zeros(41,73,3,10);
 for k = 1:10
     contour = pts(G==ind(k));
+    [patch_list(:,:,:,k),Rp,par_curves] = ...
+        make_patch(contour,img, 'scale_list',30);
 
-    [patch,Rp,par_curves] = make_patch(contour,img, ...
-                            'scale_list',30);
-    
-    axes(h);
     x = [contour(:).x];
     hold on;
     plot(x(1,:),x(2,:), ...
-         'b-', 'LineWidth',3);
+         'b-', 'LineWidth',2);
     plot(par_curves.x1(1,:),par_curves.x1(2,:), ...
-         'g-','LineWidth',3);
+         'g-','LineWidth',2);
     plot(par_curves.x2(1,:),par_curves.x2(2,:), ...
-         'r-', 'LineWidth',3);
+         'r-', 'LineWidth',2);
     hold off;
-    
-%    ind = 1:10:size(x,2);
-%    quiver(x(1,ind),x(2,ind),n(1,ind),n(2,ind),'LineWidth',3);
-%    hold off;
-%
-    figure;
-    imshow(patch);
 end
+
+figure;
+montage(uint8(patch_list))
