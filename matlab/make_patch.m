@@ -22,7 +22,7 @@ for k = 1:size(X,2)
     s = linspace(0, ...
                  norm(par_curves.x1(:,ind(k))-par_curves.x2(:,ind(k))), ...
                  cfg.ysampling_freq);
-    x2 = par_curves.x1(:,ind(k))+bsxfun(@times,s,n(:,k));
+    x2 = par_curves.x1(:,ind(k))+bsxfun(@times,s,n(:,ind(k)));
     X(:,k) = x2(1,:);
     Y(:,k) = x2(2,:);
 end
@@ -56,5 +56,4 @@ if numel(sc_list) > 1
 else
     [par_curves,n] = ...
         make_par_curves(contour,sc_list);    
-    keyboard;
 end
