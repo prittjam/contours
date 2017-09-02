@@ -28,7 +28,8 @@ h = gca;
 for k = 1:10
     contour = pts(G==ind(k));
 
-    [patch,Rp] = make_patch(contour,n,img, 'Scale','Fixed');
+    [patch,Rp,par_curves] = make_patch(contour,img, ...
+                            'scale_list',30);
     
     axes(h);
     x = [contour(:).x];
