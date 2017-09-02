@@ -1,4 +1,8 @@
-function [] = patch_demo()
+function [] = patch_demo(varargin)
+cfg = struct('scale_list', 30);
+
+cfg = cmp_argparse(cfg,varargin{:});
+
 dlines_init();
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 parent_path = fileparts(cur_path);
@@ -28,7 +32,7 @@ patch_list = zeros(41,73,3,10);
 for k = 1:10
     contour = pts(G==ind(k));
     [patch_list(:,:,:,k),Rp,par_curves] = ...
-        make_patch(contour,img, 'scale_list',30);
+        make_patch(contour,img, 'scale_list',cfg.scale_list);
 
     x = [contour(:).x];
     hold on;
@@ -42,4 +46,4 @@ for k = 1:10
 end
 
 figure;
-montage(uint8(patch_list))
+montage(uint8(patch_list));
