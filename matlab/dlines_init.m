@@ -25,7 +25,7 @@ if ~exist('+PT','dir')
     addpath([parent_path '/external/points']);
 end
 
-if ~exist('cmp_splitapply','file')
+if ~exist('cmp_argparse','file')
     addpath([parent_path '/external/matlab_extras']);
 end
 

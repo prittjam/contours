@@ -6,3 +6,5 @@ Y = [rgn_stats(ind).Y];
 [~,ind2] = max(Y);
 idx = ind(ind2);
 best_scale = rgn_stats(idx).scale;
+
+keyboard;

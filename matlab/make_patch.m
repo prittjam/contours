@@ -2,12 +2,21 @@ function [patch,Rp,par_curves] = make_patch(contour,img,varargin)
 cfg = struct('patch_ny', 41, ...
              'aspect_ratio', 16/9, ...
              'scale_list', 30, ...
-             'ysampling_freq', 10);
+             'ysampling_freq', 10, ...
+             'clip_border', true);
 
 cfg.patch_nx = round(cfg.aspect_ratio*cfg.patch_ny);
 cfg.xsampling_freq = round(cfg.aspect_ratio*cfg.ysampling_freq);
 
 [cfg,leftover] = cmp_argparse(cfg,varargin{:});
+
+patch = [];
+Rp = [];
+
+border = [1 1; ...
+          size(img,2) 1; ...
+          size(img,2) size(img,1) ; ...
+          1 size(img,1);]';
 
 N = size([contour(:).x],2);
 ind = floor(linspace(1,N,cfg.xsampling_freq));
@@ -27,20 +36,28 @@ for k = 1:size(X,2)
     Y(:,k) = x2(2,:);
 end
 
-[xxn,yyn] = ...
-    meshgrid(linspace(-cfg.aspect_ratio/2,cfg.aspect_ratio/2,cfg.xsampling_freq), ....
-           linspace(-0.5,0.5,cfg.ysampling_freq));
-fixed_points = [xxn(:) yyn(:)];
-moving_points = [X(:) Y(:)];
+if cfg.clip_border
+    in = inpolygon(X(:),Y(:),border(1,:),border(2,:)); 
+else
+    in = true;
+end
 
-tform = fitgeotrans(moving_points,fixed_points,'lwm',12);
+if all(in)
+    [xxn,yyn] = ...
+        meshgrid(linspace(-cfg.aspect_ratio/2,cfg.aspect_ratio/2,cfg.xsampling_freq), ....
+                 linspace(-0.5,0.5,cfg.ysampling_freq));
+    fixed_points = [xxn(:) yyn(:)];
+    moving_points = [X(:) Y(:)];
 
-R = imref2d([cfg.patch_ny cfg.patch_nx]);
-R.XWorldLimits = [-cfg.aspect_ratio/2 cfg.aspect_ratio/2];
-R.YWorldLimits = [-0.5 0.5];
-
-[patch,Rp] = imwarp(img,tform,'OutputView',R);
-patch = patch(end:-1:1,:,:);
+    tform = fitgeotrans(moving_points,fixed_points,'lwm',12);
+    
+    R = imref2d([cfg.patch_ny cfg.patch_nx]);
+    R.XWorldLimits = [-cfg.aspect_ratio/2 cfg.aspect_ratio/2];
+    R.YWorldLimits = [-0.5 0.5];
+    
+    [patch,Rp] = imwarp(img,tform,'OutputView',R);
+    patch = patch(end:-1:1,:,:);
+end 
 
 function [par_curves,n] = select_par_curves(contour,img,sc_list)
 if numel(sc_list) > 1
