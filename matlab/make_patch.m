@@ -49,14 +49,14 @@ if ~isempty(par_curves)
     patch = patch(end:-1:1,:,:);
 end
     
-function [par_curves,n] = select_par_curves(contour,img,sc_list)
+function [opt_par_curves,opt_n] = select_par_curves(contour,img,sc_list)
 border = [1 1; ...
           size(img,2) 1; ...
           size(img,2) size(img,1) ; ...
           1 size(img,1);]';
 
-par_curves = [];
-n = [];
+opt_par_curves = [];
+opt_n = [];
 
 if numel(sc_list) > 1
     num_rgns = 0;
@@ -78,13 +78,15 @@ if numel(sc_list) > 1
     if num_rgns == numel(sc_list)
         rgn_stats = calc_saliency(rgn_stats);
         [ind,best_scale] = select_scale(rgn_stats);
-        par_curves = par_curves_list(ind);
+        opt_par_curves = par_curves_list(ind);
+        opt_n = n;
     end
 else
+    [par_curves,n] = make_par_curves(contour,sc_list);    
     xx = [par_curves.x1 par_curves.x2];
     in = inpolygon(xx(1,:),xx(2,:),border(1,:),border(2,:)); 
     if all(in)
-        [par_curves,n] = ...
-            make_par_curves(contour,sc_list);    
+        opt_par_curves = par_curves;
+        opt_n = n;
     end
 end
