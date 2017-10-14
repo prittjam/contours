@@ -2,8 +2,10 @@ function [] = patch_demo(img,varargin)
 cfg = struct('scale_list', 30);
 cfg = cmp_argparse(cfg,varargin{:}); 
 
+keyboard;
+
 E = DL.extract_contours(img);
-contour_list = DL.segment_contours(E);
+contour_list = DL.segment_contours2(E);
 
 x = [contour_list(:).x];
 G = [contour_list(:).G]; 
