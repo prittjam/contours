@@ -1,6 +1,6 @@
 function pts = segment_contours(E,varargin)
 cfg = struct('min_response',1e-3, ...
-             'max_kappa', 1e-1, ...
+             'max_kappa', 5e-1, ...
              'min_length', 15, ...
              'kappa_stride', 5, ...
              'theta_stride', 5);
@@ -59,17 +59,22 @@ badlabel = mat2cell(nan(1,numel(isbad)),1,ones(1,numel(isbad)));
 
 
 function [G,g] = break_contour(kappa)
-ind = find((kappa > 0.1) & ~isnan(kappa)); 
+ind = find((kappa > 0.2) & ~isnan(kappa)); 
 G = nan(size(kappa));
 g = 0;
 s = 1;
-for k = 1:numel(ind)
-    if ind(k) > s
-        g = g+1;
-        G(s:ind(k)-1) = g;
+
+if ~isempty(ind)
+    for k = 1:numel(ind)
+        if ind(k) > s
+            g = g+1;
+            G(s:ind(k)-1) = g;
+        end
+        s = ind(k)+1;
     end
-    s = ind(k)+1;
-end
+else
+    G = repmat(1,size(G));
+end 
 
 function x = rm_short_contours(x,min_length)
 if numel(x) < min_length

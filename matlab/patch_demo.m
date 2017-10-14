@@ -2,10 +2,8 @@ function [] = patch_demo(img,varargin)
 cfg = struct('scale_list', 30);
 cfg = cmp_argparse(cfg,varargin{:}); 
 
-keyboard;
-
 E = DL.extract_contours(img);
-contour_list = DL.segment_contours2(E);
+contour_list = DL.segment_contours(E);
 
 x = [contour_list(:).x];
 G = [contour_list(:).G]; 
@@ -14,7 +12,6 @@ X = cmp_splitapply(@(x) { [x;ones(1,size(x,2))] }, ...
                    [contour_list(:).x],[contour_list(:).G]);
 Gsz  = cellfun(@(x) numel(x),X);
 [~,ind] = sort(Gsz,'descend');
-
 figure;
 imshow(img);
 
@@ -40,5 +37,6 @@ for k = 1:num_patches
     end
 end
 
+size(patch_list);
 figure;
 montage(uint8(patch_list));
