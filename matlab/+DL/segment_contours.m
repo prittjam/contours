@@ -1,6 +1,6 @@
 function pts = segment_contours(E,varargin)
 cfg = struct('min_response',1e-3, ...
-             'max_kappa', 5e-1, ...
+             'max_kappa', 1e-1, ...
              'min_length', 15, ...
              'kappa_stride', 5, ...
              'theta_stride', 5);
@@ -42,7 +42,7 @@ uG = unique(G);
 maxGc = 0;
 for g = 1:numel(uG)
     iG = find(G==g);
-    Gc = break_contour(kappa(iG));
+    Gc = break_contour(kappa(iG),cfg.max_kappa);
     if ~all(isnan(Gc))
         Gc = findgroups(msplitapply(@(g) rm_short_contours(g,cfg.min_length),Gc,Gc));
         Gc = Gc+maxGc;
@@ -58,8 +58,8 @@ badlabel = mat2cell(nan(1,numel(isbad)),1,ones(1,numel(isbad)));
 [pts(isbad).G] = badlabel{:};
 
 
-function [G,g] = break_contour(kappa)
-ind = find((kappa > 0.2) & ~isnan(kappa)); 
+function [G,g] = break_contour(kappa,max_kappa)
+ind = find((kappa > max_kappa) & ~isnan(kappa)); 
 G = nan(size(kappa));
 g = 0;
 s = 1;
