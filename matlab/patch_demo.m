@@ -2,6 +2,7 @@ function [] = patch_demo(img,varargin)
 cfg = struct('scale_list', 30, ...
              'use_scale_space',true);
 
+dlines_init();
 cfg = cmp_argparse(cfg,varargin{:}); 
 
 if cfg.use_scale_space

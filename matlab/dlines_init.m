@@ -1,17 +1,9 @@
-function [] = dlines_init(opt_path)
-if nargin < 1
-    opt_path = '~/opt/';
-end
-
+function [] = dlines_init()
 [cur_path, name, ext] = fileparts(mfilename('fullpath'));
 
 addpath([cur_path]);
 
 parent_path = fileparts(cur_path);
-
-if ~exist('calc_curvature','dir')
-    addpath(fullfile([opt_path 'mex']));
-end
 
 if ~exist('edgesDemo','file')
     addpath([parent_path '/external/edges']);
