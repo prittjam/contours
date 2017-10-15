@@ -1,12 +1,14 @@
-function [ss,sigma] = make_scale_space(in,levels,step)
-[ny,nx,~] = size(in);
-num_octaves = log2(min(width,height));
-
+function ss = make_scale_space(img)
+[ny,nx,~] = size(img);
+num_octaves = floor(log2(min(nx,ny)));
+tmp = bsxfun(@plus,[0:num_octaves-1],transpose([0:2])/3);
 sigma0 = 1.6;
-sigma=sigma0*2.^[0:num_octaves-1]; 
+sigma_list = sigma0*2.^tmp(:);
 
-ss=zeros([size(in) levels]);
-ss(:,:,1)=in;
-for i = 2:levels 
-    ss(:,:,i)=gaussfilter(in, sigma(i));
+ss = struct('sigma',0.5, ...
+            'img',img);
+
+for k = 1:numel(sigma_list)
+    ss(k) = struct('sigma',sigma_list(k), ...
+                   'img', imgaussfilt(img,sigma_list(k)));
 end

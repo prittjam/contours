@@ -1,4 +1,4 @@
-function [patch,Rp,par_curves] = make_patch(contour,img,varargin)
+function [patch,Rp,par_curves] = make_patch(contour,ss,varargin)
 cfg = struct('patch_ny', 41, ...
              'aspect_ratio', 16/9, ...
              'scale_list', 30, ...
@@ -19,8 +19,9 @@ ind = floor(linspace(1,N,cfg.xsampling_freq));
 X = zeros(cfg.ysampling_freq,cfg.xsampling_freq);
 Y = zeros(cfg.ysampling_freq,cfg.xsampling_freq);
 
-[par_curves,n] = ...
-    select_par_curves(contour,img,cfg.scale_list);
+[par_curves,n] = select_par_curves(contour,ss(1).img,cfg.scale_list);
+
+sigma_list = [ss(:).sigma];
 
 if ~isempty(par_curves)
     for k = 1:size(X,2)
@@ -45,7 +46,9 @@ if ~isempty(par_curves)
     R.XWorldLimits = [-cfg.aspect_ratio/2 cfg.aspect_ratio/2];
     R.YWorldLimits = [-0.5 0.5];
     
-    [patch,Rp] = imwarp(img,tform,'OutputView',R);
+    [~,idx] = min(abs(cfg.scale_list/10-sigma_list));
+    
+    [patch,Rp] = imwarp(ss(idx).img,tform,'OutputView',R);
     patch = patch(end:-1:1,:,:);
 end
     

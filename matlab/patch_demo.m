@@ -1,9 +1,20 @@
 function [] = patch_demo(img,varargin)
-cfg = struct('scale_list', 30);
+cfg = struct('scale_list', 30, ...
+             'use_scale_space',true);
+
 cfg = cmp_argparse(cfg,varargin{:}); 
 
+if cfg.use_scale_space
+    ss = make_scale_space(img);
+else
+    ss = struct('img',img, ...
+                'sigma',0.5)
+end
+
+tmp = pwd;
 E = DL.extract_contours(img);
 contour_list = DL.segment_contours(E);
+cd(tmp)
 
 x = [contour_list(:).x];
 G = [contour_list(:).G]; 
@@ -18,14 +29,12 @@ imshow(img);
 num_patches = min(24,numel(Gsz));
 patch_list = zeros(41,73,3,num_patches);
 
-ss = make_scale_space(img);
-
-keyboard;
-
 for k = 1:num_patches
     contour = contour_list(G==ind(k));
+    
     [patch,Rp,par_curves] = ...
-        make_patch(contour,img, 'scale_list',cfg.scale_list);
+        make_patch(contour,ss, ...
+                   'scale_list',cfg.scale_list);
     
     if ~isempty(patch)
         patch_list(:,:,:,k) = patch;
