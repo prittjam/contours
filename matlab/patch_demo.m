@@ -18,6 +18,10 @@ imshow(img);
 num_patches = min(24,numel(Gsz));
 patch_list = zeros(41,73,3,num_patches);
 
+ss = make_scale_space(img);
+
+keyboard;
+
 for k = 1:num_patches
     contour = contour_list(G==ind(k));
     [patch,Rp,par_curves] = ...
