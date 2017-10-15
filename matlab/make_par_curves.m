@@ -15,8 +15,7 @@ df = gradient(x,10);
 df2 = gradient(df,10);
 
 n = [df(2,:); -df(1,:)];
-un = n./sqrt(sum(n.^2));
-
+un = bsxfun(@rdivide,n,sqrt(sum(n.^2)));
 % % determine radius of curvature
 R=(df(1,:).^2+df(2,:).^2).^(3/2)./abs(df(1,:).*df2(2,:)-df(2,:).*df2(1,:));
 
