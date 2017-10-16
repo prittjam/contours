@@ -3,11 +3,11 @@ function extract_patches_from_contours(img_fname, contour_fname, patches_img_fna
 img = imread(img_fname);
 [h,w,ch] = size(img);
 
-load(contour_fname)
+load(contour_fname);
 
 num_patches = max(M(:,3));
 
-scales = [4:2:40];
+scales = [5:2:70];
 num_scales = numel(scales);
 
 patch_w = 73;

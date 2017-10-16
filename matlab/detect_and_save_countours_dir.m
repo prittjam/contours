@@ -21,7 +21,8 @@ while ~isempty(remain)
    segments = cat(1,segments,token);
 end
 
-hh = parpool(min(100,n_imgs));
+%hh = parpool('SGE_Import',min(100,n_imgs));
+hh = parpool('local', 12);
 addAttachedFiles(hh,segments)
 
 disp(files)
