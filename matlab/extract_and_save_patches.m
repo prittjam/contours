@@ -44,7 +44,7 @@ parfor i=1:n_imgs
         disp([patches_out_fname, ' exists, skipping'])
         continue
     end
-    extract_patches_from_contours(img_fname, contour_fname, patches_out_fname, '')
+    extract_patches_from_contours(img_fname, contour_fname, patches_out_fname, '');
     
 end
 delete(gcp)
