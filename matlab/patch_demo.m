@@ -35,7 +35,8 @@ for k = 1:num_patches
     
     [patch,Rp,par_curves] = ...
         make_patch(contour,ss, ...
-                   'scale_list',cfg.scale_list);
+                   'scale_list',cfg.scale_list, ...
+                   'scale_space_ratio', 10);
     
     if ~isempty(patch)
         patch_list(:,:,:,k) = patch;

@@ -3,7 +3,8 @@ cfg = struct('patch_ny', 41, ...
              'aspect_ratio', 16/9, ...
              'scale_list', 30, ...
              'ysampling_freq', 10, ...
-             'clip_border', true);
+             'clip_border', true, ...
+             'scale_space_ratio', 10);
 
 cfg.patch_nx = round(cfg.aspect_ratio*cfg.patch_ny);
 cfg.xsampling_freq = round(cfg.aspect_ratio*cfg.ysampling_freq);
@@ -46,7 +47,7 @@ if ~isempty(par_curves)
     R.XWorldLimits = [-cfg.aspect_ratio/2 cfg.aspect_ratio/2];
     R.YWorldLimits = [-0.5 0.5];
     
-    [~,idx] = min(abs(cfg.scale_list/10-sigma_list));
+    [~,idx] = min(abs(cfg.scale_list/cfg.scale_space_ratio-sigma_list));
     
     [patch,Rp] = imwarp(ss(idx).img,tform,'OutputView',R);
     patch = patch(end:-1:1,:,:);
