@@ -1,4 +1,4 @@
-function [] = xfer_curve_demo(varargin)
+function [] = xfer_demo(varargin)
 dlines_init();
 img1 = imread('../img/img1.png');
 img2 = imread('../img/img4.png');
@@ -19,7 +19,7 @@ x = [contour_list(:).x];
 G = [contour_list(:).G]; 
 theta = [contour_list(:).theta];
 
-contour_listp = xfer_contour_list(contour_list);
+contour_listp = xfer_contour_list(contour_list,H);
 
 X = cmp_splitapply(@(x) { [x;ones(1,size(x,2))] }, ...
                    [contour_list(:).x],[contour_list(:).G]);
