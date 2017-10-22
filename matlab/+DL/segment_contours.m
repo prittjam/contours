@@ -54,9 +54,10 @@ for g = 1:numel(uG)
 end
 
 isbad = find(isnan([pts(:).theta]));
-badlabel = mat2cell(nan(1,numel(isbad)),1,ones(1,numel(isbad)));
-[pts(isbad).G] = badlabel{:};
+%badlabel = mat2cell(nan(1,numel(isbad)),1,ones(1,numel(isbad)));
+%[pts(isbad).G] = badlabel{:};
 
+pts(isbad) = [];
 
 function [G,g] = break_contour(kappa,max_kappa)
 ind = find((kappa > max_kappa) & ~isnan(kappa)); 
