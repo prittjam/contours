@@ -40,7 +40,6 @@ for k = 1:num_patches
     
     if ~isempty(patch)
         patch_list(:,:,:,k) = patch;
-        x = [contour(:).x];
         hold on;
         plot(par_curves.x(1,:),par_curves.x(2,:), ...
              'b-', 'LineWidth',2);
