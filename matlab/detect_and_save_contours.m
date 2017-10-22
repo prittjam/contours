@@ -23,7 +23,7 @@ M = [];
 
 for k = 1:num_patches
     contour = contour_list(G==ind(k));
-    disp(contour)
+    disp(contour);
     M_curr = zeros(numel(contour), 5);
     xy = [contour(:).x];
     M_curr(:,1) = double(xy(1,:)) / double(w);

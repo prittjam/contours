@@ -34,7 +34,6 @@ if ~isempty(par_curves)
         Y(:,k) = x2(2,:);
     end
 
-
     [xxn,yyn] = ...
         meshgrid(linspace(-cfg.aspect_ratio/2,cfg.aspect_ratio/2,cfg.xsampling_freq), ....
                  linspace(-0.5,0.5,cfg.ysampling_freq));
@@ -46,9 +45,10 @@ if ~isempty(par_curves)
     R = imref2d([cfg.patch_ny cfg.patch_nx]);
     R.XWorldLimits = [-cfg.aspect_ratio/2 cfg.aspect_ratio/2];
     R.YWorldLimits = [-0.5 0.5];
-    
-    [~,idx] = min(abs(cfg.scale_list/cfg.scale_space_ratio-sigma_list));
-    
+
+    %sigma_list
+    %[~,idx] = min(abs(cfg.scale_list/10-sigma_list));
+    idx = max(1,round(cfg.scale_list / 10));
     [patch,Rp] = imwarp(ss(idx).img,tform,'OutputView',R);
     patch = patch(end:-1:1,:,:);
 end

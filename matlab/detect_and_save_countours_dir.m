@@ -10,9 +10,24 @@ end
 
 
 n_imgs = numel(files);
+try
+   delete(gcp);
+catch
+end
+segments = {};
+remain =genpath('/home.dokt/mishkdmy/test_dlines/contours/');
+while ~isempty(remain)
+   [token,remain] = strtok(remain, ':');
+   segments = cat(1,segments,token);
+end
 
-for i=1:n_imgs
-    img_fname = [files(i).folder,'/' files(i).name] ;
+%hh = parpool('SGE_Import',min(100,n_imgs));
+hh = parpool('local', 12);
+addAttachedFiles(hh,segments)
+
+disp(files)
+parfor i=1:n_imgs
+    img_fname = [in_dir_name,'/' files(i).name] ;
     try
         imfinfo(img_fname);
     catch 
@@ -22,3 +37,4 @@ for i=1:n_imgs
     out_fname = [our_dir_name, '/', files(i).name, '_contours.mat'];
     detect_and_save_contours(img_fname, out_fname)
 end
+delete(gcp)
