@@ -13,7 +13,7 @@ l = [cos(theta); sin(theta); c];
 lp = inv(H)'*l;
 nlp = LINE.inhomogenize(lp);
 
-thetap = atan2(lp(2,:),lp(1,:));
+thetap = atan2(nlp(2,:),nlp(1,:));
 
 contour_listp = struct('x',mat2cell(xp(1:2,:),2,ones(1,size(x,2))), ...
                        'G',mat2cell(G,1,ones(1,numel(G))), ...
