@@ -4,10 +4,15 @@ theta = [contour_list(:).theta];
 G = [contour_list(:).G];
 
 xp = PT.renormI(H*[x;ones(1,size(x,2))]);
-l = [cos(theta); ...
-     sin(theta); 
-     ones(1,numel(theta))];
+
+a = cos(theta);
+b = sin(theta);
+c = -dot([a;b],xp(1:2,:));
+
+l = [cos(theta); sin(theta); c];
 lp = inv(H)'*l;
+nlp = LINE.inhomogenize(lp);
+
 thetap = atan2(lp(2,:),lp(1,:));
 
 contour_listp = struct('x',mat2cell(xp(1:2,:),2,ones(1,size(x,2))), ...
