@@ -14,7 +14,12 @@ end
 
 tmp = pwd;
 E = DL.extract_contours(img);
-contour_list = DL.segment_contours(E);
+%contour_list = DL.segment_contours(E);
+contour_list = ...
+    DL.segment_contours(E, ...
+                        'min_response',-inf, ...
+                        'max_kappa', inf, ...
+                        'min_length', 10);
 cd(tmp)
 
 x = [contour_list(:).x];
