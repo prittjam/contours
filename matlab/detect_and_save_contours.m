@@ -6,8 +6,6 @@ img = imread(img_fname);
 E = DL.extract_contours(img);
 contour_list = DL.segment_contours(E);
 
-
-%disp([img_fname, ' has ', num2str(num_patches), ' contours'])
 M = contour_list_to_M(contour_list, w, h);
 save(out_fname,'M');
 
