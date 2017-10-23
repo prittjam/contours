@@ -1,44 +1,36 @@
 function detect_and_save_contours(img_fname, out_fname)
+
 img = imread(img_fname);
 [h,w,ch] = size(img);
 
 E = DL.extract_contours(img);
 contour_list = DL.segment_contours(E);
 
-x = [contour_list(:).x];
-G = [contour_list(:).G];
 
-X = cmp_splitapply(@(x) { [x;ones(1,size(x,2))] }, ...
-    [contour_list(:).x],[contour_list(:).G]);
-Gsz  = cellfun(@(x) numel(x),X);
-[~,ind] = sort(Gsz,'descend');
+%disp([img_fname, ' has ', num2str(num_patches), ' contours'])
+M = contour_list_to_M(contour_list, w, h);
+save(out_fname,'M');
 
-
-num_patches = numel(Gsz);
-
-disp([img_fname, ' has ', num2str(num_patches), ' contours'])
+%% Reproject contours from reference image
 
 
-M = [];
-
-for k = 1:num_patches
-    contour = contour_list(G==ind(k));
-    disp(contour);
-    M_curr = zeros(numel(contour), 5);
-    xy = [contour(:).x];
-    M_curr(:,1) = double(xy(1,:)) / double(w);
-    
-    M_curr(:,2) = double(xy(2,:)) / double(h);
-    M_curr(:,3) = [contour(:).G];
-    M_curr(:,4) = [contour(:).theta];
-    M_curr(:,5) = [contour(:).kappa];
-    if (k > 1)
-        M = [M;M_curr];
-    else
-        M = M_curr;
+[filepath,name,ext] = fileparts(img_fname);
+if contains(name,'1')
+    homs = dir([filepath, '/H*']);
+    num_homs = numel( homs);
+    for i =1:num_homs
+        disp(['Reprojecting to img ', num2str(i+1)]);
+        H = dlmread([filepath, '/', homs(i).name]);
+        contour_listp = xfer_contour_list(contour_list,H);
+        rep_img = imread([filepath, '/', num2str(i+1), ext]);
+        [h,w,ch] = size(rep_img);
+        M = contour_list_to_M(contour_listp, w, h);
+        rep_out_fname = strrep(out_fname,'_contours.mat',['_contours_1_to', num2str(i+1) ,'.mat']); 
+        save(rep_out_fname,'M');
     end
 end
 
 
-save(out_fname,'M');
+%% 
+
 end
