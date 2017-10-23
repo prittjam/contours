@@ -16,6 +16,7 @@ contour_list2 = DL.segment_contours(E);
 %load('contour_list2.mat');
 
 cspond_list = match_contours(contour_list1,contour_list2,H,T,overlap); 
+    
 draw_contour_csponds(cspond_list,img1,contour_list1,img2,contour_list2);
 
 %save('contour_list1.mat','contour_list1');
