@@ -13,7 +13,6 @@ X = cmp_splitapply(@(x) { [x;ones(1,size(x,2))] }, ...
 Gsz  = cellfun(@(x) numel(x),X);
 [~,ind] = sort(Gsz,'descend');
 
-
 num_patches = numel(Gsz);
 
 disp([img_fname, ' has ', num2str(num_patches), ' contours'])
