@@ -1,4 +1,4 @@
-function cspond = match_contours(contour_list1,contour_list2,H,T)
+function cspond = match_contours(contour_list1,contour_list2,H,T,overlap)
 G1 = [contour_list1(:).G]; 
 uG1 = unique(G1);
 G2 = [contour_list2(:).G];
@@ -11,7 +11,7 @@ MdlKDT = KDTreeSearcher(transpose([contour_list2(:).x]));
 [idx,d] = knnsearch(MdlKDT,transpose([contour_list1p(:).x]));
 Gidx = G2(idx);
 Gidx(d>T) = nan;
-modes12 = cmp_splitapply(@(x) mode_ratio(x),Gidx',G1');
+modes12 = cmp_splitapply(@(x) mode_ratio(x,overlap),Gidx',G1');
 inl = ~isnan(modes12);
 st12 = [uG1(inl)' modes12(inl)+numel(uG1)]; 
 
@@ -19,7 +19,7 @@ MdlKDT = KDTreeSearcher(transpose([contour_list1(:).x]));
 [idx,d] = knnsearch(MdlKDT,transpose([contour_list2p(:).x]));
 Gidx = G1(idx);
 Gidx(d>T) = nan;
-modes21 = cmp_splitapply(@(x) mode_ratio(x),Gidx',G2');
+modes21 = cmp_splitapply(@(x) mode_ratio(x,overlap),Gidx',G2');
 inl = ~isnan(modes21);
 st21 = [modes21(inl) uG2(inl)'+numel(uG1)]; 
 
@@ -38,12 +38,12 @@ for k = 1:numel(matches)
                        'right',vright-numel(uG1));
 end
 
-function ind = mode_ratio(x)
+function ind = mode_ratio(x,overlap)
 ind = nan;
 if any(~isnan(x))
     freq = hist(x,1:max(x));
     [val,ind2] = max(freq);
-    if val/numel(x) > 0.5
+    if val/numel(x) > overlap
         ind = ind2;
     end
 end
