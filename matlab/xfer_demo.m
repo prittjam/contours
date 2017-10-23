@@ -55,4 +55,6 @@ for k = 1:num_contours
     plot(par_curvesp.x2(1,:),par_curvesp.x2(2,:), ...
          'r-', 'LineWidth',2);
     hold off;    
-end
+<end
+
+
