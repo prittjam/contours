@@ -1,4 +1,4 @@
-function [curve_list,un] = make_par_contours(contour,sc_list)
+function [curve_list,un] = make_par_curves(contour,sc_list)
 xc = [contour(:).x];
 sigma = 5;
 xg = -3*sigma:3*sigma;
@@ -25,6 +25,7 @@ concavity=2*(df2(2,:) > 0)-1;
 % % Determine overlap points for inner normal curve
 for k = 1:numel(sc_list)
     curve_list(k).overlap = R < sc_list(k);
+    curve_list(k).x = x;
     curve_list(k).x1 = x-sc_list(k)*un;
     curve_list(k).x2 = x+sc_list(k)*un;
     curve_list(k).scale = sc_list(k);

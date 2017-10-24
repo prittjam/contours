@@ -15,8 +15,8 @@ E1(E1 < cfg.min_response) = 0;
 E1(E1 ~= 0) = 1;
 
 E2 = bwmorph(E1,'thin',Inf);
-E3 = bwmorph(E2,'spur',5);
-
+E3 = bwmorph(E2,'spur',1);
+%
 B = DL.edgelink(E3,cfg.min_length);
 Bsz = cellfun(@(x) size(x,1),B);
 
@@ -53,10 +53,13 @@ for g = 1:numel(uG)
     [pts(iG).G] = tmp{:};
 end
 
-isbad = find(isnan([pts(:).theta]));
-badlabel = mat2cell(nan(1,numel(isbad)),1,ones(1,numel(isbad)));
-[pts(isbad).G] = badlabel{:};
+isbad = find(isnan([pts(:).theta]) | isnan([pts(:).G]));
+%badlabel = mat2cell(nan(1,numel(isbad)),1,ones(1,numel(isbad)));
+%[pts(isbad).G] = badlabel{:};
 
+pts(isbad) = [];
+newG = mat2cell(findgroups([pts(:).G]),1,ones(1,numel(pts)));
+[pts(:).G] = newG{:};
 
 function [G,g] = break_contour(kappa,max_kappa)
 ind = find((kappa > max_kappa) & ~isnan(kappa)); 
