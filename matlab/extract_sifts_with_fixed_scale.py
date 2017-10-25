@@ -114,7 +114,7 @@ for batch_idx in range(n_batches):
         break
     data_a = patches_for_desc[batch_idx * bs: end, :, :, :]
     #print data_a.shape
-    data_a = data_a.unfold(3, 41, 3);
+    data_a = data_a.unfold(3, 41, 7);
     #print data_a.shape
     data_a = data_a.cuda()
     data_a = Variable(data_a, volatile=True)
