@@ -13,7 +13,9 @@ save(out_fname,'M');
 
 
 [filepath,name,ext] = fileparts(img_fname);
-if contains(name,'1')
+%if contains(name,'1')
+k = strfind(name,'1');
+if (numel(k) >0) && (numel(contour_list) > 0) 
     homs = dir([filepath, '/H*']);
     num_homs = numel( homs);
     for i =1:num_homs

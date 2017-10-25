@@ -22,12 +22,13 @@ while ~isempty(remain)
    segments = cat(1,segments,token);
 end
 
-hh = parpool('local', 12);
+%hh = parpool('local', 12);
+hh = parpool('SGE', 50);
 addAttachedFiles(hh,segments)
 
 
 parfor i=1:n_imgs
-    img_fname = [files(i).folder,'/' files(i).name] ;
+    img_fname = [imgs_dir,'/' files(i).name]
     try
         imfinfo(img_fname);
     catch
