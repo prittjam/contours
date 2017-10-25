@@ -4,7 +4,10 @@ img = imread(img_fname);
 [h,w,ch] = size(img);
 
 E = DL.extract_contours(img);
-contour_list = DL.segment_contours(E);
+contour_list = DL.segment_contours(E,
+                        'min_response',-inf, ...
+                        'max_kappa', inf, ...
+                        'min_length', 15);
 
 M = contour_list_to_M(contour_list, w, h);
 save(out_fname,'M');

@@ -1,4 +1,4 @@
-function cspond = match_contours(contour_list1,contour_list2,H,T,overlap)
+function [cspond, recall] = match_contours(contour_list1,contour_list2,H,T,overlap)
 G1 = [contour_list1(:).G]; 
 uG1 = unique(G1);
 sz1 = hist(G1,1:max(G1));
@@ -41,6 +41,12 @@ for k = 1:numel(matches)
     cspond(k) = struct('left', vleft, ...
                        'right',vright-numel(uG1));
 end
+
+if ~exist('cspond','var')
+    cspond = struct;
+end
+    
+recall = numel(cspond) / min(numel(uG1), numel(uG2));
 
 function ind = mode_ratio(x,overlap,sz)
 ind = nan;
