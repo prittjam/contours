@@ -1,5 +1,5 @@
-function [] = tdv_show_matches
-data_pth = '../data/fountain/';
+function [] = show_matches(pth,dataset)
+data_pth = [pth dataset '/'];
 load([data_pth 'data.mat']);
 load([data_pth 'cspond.mat']);
 freq = arrayfun(@(x) numel(x.idx),cspond);
@@ -13,9 +13,6 @@ for k = 1:topN
     contour_idx = idx-ind(img_idx)+1;
     cmp_splitapply(@(a,b) draw_contours(a,b,data_pth,imnames), ...
                    img_idx,contour_idx,findgroups(img_idx));
-    for k2 = 1:numel(contour_idx)
-        load_data(data_path,imnames(k2).name);
-    end
 end
 
 function [] = ...

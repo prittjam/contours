@@ -2,8 +2,6 @@ function [] = match(pth,data_set)
 T = 0.95;
 data_pth = [pth data_set '/'];
 load([data_pth 'embedding.mat']);
-clear all;
-load('jaccard_test.mat');
 J = calc_Jaccard_similarity(M);
 gr = graph(J > T);
 bins = conncomp(gr);
