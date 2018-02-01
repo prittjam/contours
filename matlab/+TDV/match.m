@@ -1,8 +1,8 @@
-function [] = match()
-data_pth = '../data/fountain/';
-tmp = load('Jaccard_sim_M.mat');
-load([data_pth 'embedding.mat']);
+function [] = match(pth,data_set)
+keyboard;
 T = 0.95;
+data_pth = [pth data_set '/'];
+load([data_pth 'embedding.mat']);
 J = calc_Jaccard_similarity(M);
 gr = graph(J > T);
 bins = conncomp(gr);
@@ -17,6 +17,10 @@ figure;
 bar(freq);
 
 function J = calc_Jaccard_similarity(M)
-A = sum(M,2);
-AB = M*transpose(M);
-J = M2./(A+transpose(A)-M2);
+M = transpose(M);
+A = transpose(sum(M));
+AB = transpose(M)*M;
+[ii,jj] = find(AB);
+J = sparse(size(AB,1),size(AB,2));
+ABind = nonzeros(AB);
+J(find(AB)) =  ABind./(A(ii)+A(jj)-ABind);
