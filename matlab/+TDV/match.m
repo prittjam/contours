@@ -1,9 +1,11 @@
-function [] = match(pth,data_set)
-T = 0.95;
+function [] = match(pth,data_set,varargin)
+cfg = struct('T',0.95);
+cfg = cmp_argparse(cfg,varargin{:});
+
 data_pth = [pth data_set '/'];
 load([data_pth 'embedding.mat']);
 J = calc_Jaccard_similarity(M);
-gr = graph(J > T);
+gr = graph(J > cfg.T);
 bins = conncomp(gr);
 freq = hist(bins,1:max(bins));
 matches = find(freq > 1);

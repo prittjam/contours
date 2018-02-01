@@ -1,5 +1,6 @@
-function [] = embed(pth,data_set)
-T = 5;
+function [] = embed(pth,data_set,varargin)
+cfg = struct('T',5);
+cfg = cmp_argparse(cfg,varargin{:});
 data_pth = [pth data_set '/'];
 summary_file_name = [data_pth 'summary.mat'];
 load(summary_file_name);
@@ -20,7 +21,7 @@ if ~exist(embedding_file_name,'file')
         idx = data.u_uncalib.index{k};    
         [~,contour_list] = load_data(data_pth,fname_list(k).name);
         [ii,jj,num_contours] = process_one_img(x,idx,X,contour_list, ...
-                                               data_pth,fname_list(k).name,T);
+                                               data_pth,fname_list(k).name,cfg.T);
         ind(k) = cG+1;
         ii = ii+cG;
         cG = cG+num_contours;
