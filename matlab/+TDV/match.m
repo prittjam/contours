@@ -19,8 +19,8 @@ for k = 1:numel(matches)
     cspond(k) = struct('idx',v);
 end
 save([data_pth 'cspond.mat'],'cspond','ind');
-figure;
-bar(freq);
+%figure;
+%bar(freq);
 
 function J = calc_Jaccard_similarity(M)
 M = transpose(M);

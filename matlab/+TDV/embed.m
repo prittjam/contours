@@ -26,7 +26,7 @@ if ~exist(embedding_file_name,'file')
         ii = ii+cG;
         cG = cG+num_contours;
         M(sub2ind(size(M),ii,jj)) = 1;
-        disp(['Embedding contours from image ' num2str(k) ' of ' num2str(numel(fname_list))]);
+%        disp(['Embedding contours from image ' num2str(k) ' of ' num2str(numel(fname_list))]);
     end
     save([data_pth 'embedding.mat'],'M','ind');
 end
