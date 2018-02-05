@@ -4,6 +4,11 @@ cfg = cmp_argparse(cfg,varargin{:});
 
 data_pth = [pth data_set '/'];
 load([data_pth 'embedding.mat']);
+if exist([data_pth 'cspond.mat'], 'file') == 2 
+load ([data_pth 'cspond.mat'])
+return
+end
+
 J = calc_Jaccard_similarity(M);
 gr = graph(J > cfg.T);
 bins = conncomp(gr);
