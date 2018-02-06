@@ -11,9 +11,8 @@ fname_list = data.imnames;
 M = sparse([],[],[],num_all_contours,size(data.U,2));
 X = data.U;
 
-cG = 0;
+cG = 1;
 ind = zeros(1,numel(fname_list));
-
 embedding_file_name = [data_pth 'embedding.mat'];
 if ~exist(embedding_file_name,'file')
     for k = 1:numel(fname_list)
@@ -22,10 +21,12 @@ if ~exist(embedding_file_name,'file')
         [~,contour_list] = load_data(data_pth,fname_list(k).name);
         [ii,jj,num_contours] = process_one_img(x,idx,X,contour_list, ...
                                                data_pth,fname_list(k).name,cfg.T);
-        ind(k) = cG+1;
-        ii = ii+cG;
+        ind(k) = cG;
+        if ~isempty(ii)
+            ii = ii+ind(k)-1;
+            M(sub2ind(size(M),ii,jj)) = 1;
+        end
         cG = cG+num_contours;
-        M(sub2ind(size(M),ii,jj)) = 1;
 %        disp(['Embedding contours from image ' num2str(k) ' of ' num2str(numel(fname_list))]);
     end
     save([data_pth 'embedding.mat'],'M','ind');
