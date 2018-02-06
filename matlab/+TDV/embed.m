@@ -8,6 +8,17 @@ dlines_init();
 data_pth = [pth data_set '/'];
 data = load([data_pth 'data.mat']);
 fname_list = data.imnames;
+for k = 1:numel(fname_list)
+    if max(data.u_uncalib.index{k}) > size(data.U,2)
+        tmpind = find(data.u_uncalib.index{k} > size(data.U,2));
+        tmp = data.u_uncalib.index{k};
+        tmp(tmpind) = [];
+        data.u_uncalib.index{k} = tmp;
+        disp('deleting elements which shouldn`t exist')
+    end
+end
+%data.u_uncalib.index{k} = tmp(1:size(data.U,2));
+
 M = sparse([],[],[],num_all_contours,size(data.U,2));
 X = data.U;
 
